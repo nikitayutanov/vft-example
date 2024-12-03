@@ -1,0 +1,21 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vite --port 3000 --open",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.3.4",
+    "@polkadot/types": "^13.2.1"
+  },
+  "dependencies": {
+    "@gear-js/api": "^0.39.0",
+    "@polkadot/api": "^13.2.1",
+    "sails-js": "^0.3.0"
+  }
+}
