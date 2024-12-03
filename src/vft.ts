@@ -82,7 +82,16 @@ const mintTransaction = await vftProgram.vft
 const { response: mintResponse } = await mintTransaction.signAndSend();
 await mintResponse();
 
-// 4. Watch for transfer events
+// 4. Reading balances
+// The code retrieves the balances of Alice and Bob.
+
+const balance = await vftProgram.vft.balanceOf(aliceAccountAddress);
+console.log(`Alice's balance: ${balance}`);
+
+const bobBalance = await vftProgram.vft.balanceOf(bobAccountAddress);
+console.log(`Bob's balance: ${bobBalance}`);
+
+// 5. Watch for transfer events
 
 // Subscribing to Transfer Events
 // The code subscribes to transfer events, monitors token transfers, and retrieves the balances of Alice and Bob.
@@ -107,7 +116,7 @@ const unsubscribe = vftProgram.vft.subscribeToTransferEvent(
   }
 );
 
-// 5. Transferring Tokens
+// 6. Transferring Tokens
 // The code transfers tokens from Alice to Bob, calculates the gas required, and sends the transaction.
 
 // Transfer tokens from Alice to Bob
