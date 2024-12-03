@@ -6,17 +6,17 @@ import { Program } from './lib';
 
 // 1. Preparing
 
-// Connecting to the API
+// 1.1 Connecting to the API
 const VARA_TESTNET_ENDPOINT = 'wss://testnet.vara.network';
 const api = await GearApi.create({ providerAddress: VARA_TESTNET_ENDPOINT });
 
-// Getting Developer Accounts
+// 1.2 Getting Developer Accounts
 const aliceKeyring = new Keyring({ type: 'sr25519' }).addFromUri('//Alice');
 const bobKeyring = new Keyring({ type: 'sr25519' }).addFromUri('//Bob');
 const aliceAccountAddress = decodeAddress(aliceKeyring.address);
 const bobAccountAddress = decodeAddress(bobKeyring.address);
 
-// Defining Token Constant
+// 1.3 Defining Token Constant
 const TOKEN = {
   NAME: 'Tutorial Token',
   SYMBOL: 'TT',
@@ -25,7 +25,7 @@ const TOKEN = {
 
 // 2. Getting Program Instance
 
-// to create or upload new program
+// 2.1 to create or upload new program
 const vftProgram = new Program(api);
 
 // or to use existing program
@@ -34,8 +34,7 @@ const PROGRAM_ID =
 
 const existingVftProgram = new Program(api, PROGRAM_ID);
 
-// Uploading the Program
-
+// 2.2 Uploading the Program
 // The code reads the WebAssembly file, creates a new constructor from the code, calculates the gas required, and uploads the program.
 
 const optWasmBuffer = readFileSync('./extended_vft.opt.wasm');
@@ -50,8 +49,7 @@ const { response: uploadProgramResponse } =
 
 await uploadProgramResponse();
 
-// Creating the Program
-
+// or Creating the Program
 // The code creates the program using the uploaded code ID, calculates the gas required, and sends the transaction.
 
 const VFT_CODE_ID =
@@ -70,8 +68,8 @@ const { response: createProgramResponse } =
 await createProgramResponse();
 
 // 3. Minting Tokens
-
 // The code calculates the amount of tokens to mint, mints new tokens to Alice's account, calculates the gas required, and sends the transaction.
+
 const tokensAmount = 1 * 10 ** TOKEN.DECIMALS;
 
 const mintTransaction = await vftProgram.vft
@@ -91,10 +89,9 @@ console.log(`Alice's balance: ${balance}`);
 const bobBalance = await vftProgram.vft.balanceOf(bobAccountAddress);
 console.log(`Bob's balance: ${bobBalance}`);
 
-// 5. Watch for transfer events
-
-// Subscribing to Transfer Events
+// 5. Subscribing to Transfer Events
 // The code subscribes to transfer events, monitors token transfers, and retrieves the balances of Alice and Bob.
+
 const unsubscribe = vftProgram.vft.subscribeToTransferEvent(
   async ({ from, to, value }) => {
     if (
@@ -104,11 +101,9 @@ const unsubscribe = vftProgram.vft.subscribeToTransferEvent(
     )
       return;
 
-    // Get balance of Alice's account
     const balance = await vftProgram.vft.balanceOf(aliceAccountAddress);
     console.log(`Alice's balance: ${balance}`);
 
-    // Get balance of Bob's account
     const bobBalance = await vftProgram.vft.balanceOf(bobAccountAddress);
     console.log(`Bob's balance: ${bobBalance}`);
 
@@ -118,8 +113,6 @@ const unsubscribe = vftProgram.vft.subscribeToTransferEvent(
 
 // 6. Transferring Tokens
 // The code transfers tokens from Alice to Bob, calculates the gas required, and sends the transaction.
-
-// Transfer tokens from Alice to Bob
 
 const transferTransaction = await vftProgram.vft
   .transfer(bobAccountAddress, tokensAmount)
